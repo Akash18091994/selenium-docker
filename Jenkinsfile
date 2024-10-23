@@ -2,6 +2,10 @@ pipeline {
 
     agent any
 
+    environment {
+                    DOCKER_HUB = credentials('dockerhub-creds')
+                }
+
     stages {
 
         stage('Build Jar') {
@@ -12,6 +16,7 @@ pipeline {
 
         stage('Build Image') {
             steps {
+                sh 'echo ${DOCKER_HUB_PSW} | docker login -u ${DOCKER_HUB_USR} --password-stdin'
                 sh 'docker build -t=akash0918/selenium:latest .'
             }
         }
