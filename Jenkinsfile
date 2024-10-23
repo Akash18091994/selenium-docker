@@ -6,13 +6,13 @@ pipeline {
 
         stage('Build Jar') {
             steps {
-                sh "mvn clean package -DskipTests"
+                sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Build Image') {
             steps {
-                sh "docker build -t akash0918/selenium ."
+                sh 'docker build -t=akash0918/selenium .'
             }
         }
 
@@ -21,15 +21,15 @@ pipeline {
                 DOCKER_HUB = credentials('dockerhub-creds')
             }
             steps {
-                sh 'docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}'
-                sh "docker push akash0918/selenium"
+                sh 'echo ${DOCKER_HUB_PSW} | docker login -u ${DOCKER_HUB_USR} --password-stdin'
+                sh 'docker push akash0918/selenium'
             }
         }
     }
 
     post {
         always {
-            sh "docker logout"
+            sh 'docker logout'
         }
     }
 }
